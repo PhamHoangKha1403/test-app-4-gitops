@@ -1,0 +1,36 @@
+apiVersion: app.helios.io/v1alpha1
+kind: HeliosApp
+metadata:
+  name: test-app-4
+  namespace: default
+spec:
+
+  description: "Managed by Helios Operator"
+  owner: 
+  
+  # Required Git/Docker Info
+  imageRepo: myuser/test-app-4-service
+  gitRepo: "https://github.com/PhamHoangKha1403/test-app-4.git"
+  gitopsRepo: https://github.com/PhamHoangKha1403/test-app-4-gitops
+  gitopsPath: "apps/test-app-4" # Assumed path
+  
+  # Webhook Config
+  webhookDomain: unarriving-unrapturously-amia.ngrok-free.dev
+  webhookSecret: "github-credentials-test-app-4"
+  gitopsSecretRef: "github-credentials-test-app-4"
+
+  components:
+    - name: test-app-4-backend
+      type: web-service
+      properties:
+        image: myuser/test-app-4-service:latest
+        port: 8080
+        replicas: 1
+        env:
+          - name: NODE_ENV
+            value: "production"
+      traits:
+        - type: service
+          properties:
+            port: 8080
+            targetPort: 8080
